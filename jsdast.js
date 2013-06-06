@@ -1,6 +1,7 @@
 ﻿/*!
  * jsDaST Framework v0.2.1
  * http://github.com/rgubarenko/jsdast
+ * Client application framework based on jsRazor rendering engine.
  *
  * Copyright © 2013 Roman Gubarenko (roman@makeitsoft.com)
  * Released under the MIT license
