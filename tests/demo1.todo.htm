@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>jsDaST DEMO - Todo</title>
+   
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+  <script type="text/javascript" src="data.json.js"></script>
+  <script type="text/javascript" src="../jsdast.js"></script>
+ 
+  <style type="text/css">
+    .done-true { text-decoration: line-through; color: grey; }
+  </style>
+  
+</head>
+<body>
+
+  <h1>TODO</h1>
+  <div jsdast:scope="Todo">
+    <span>{{Left}} of {{Total}} remaining</span>
+    [&nbsp;<a href="javascript:jsdast('Todo').data().archive()">archive</a>&nbsp;]
+    <ul class="unstyled">
+      <!--repeatfrom:tasks-->
+      <li>
+        <!--showfrom:done-1-->
+        <input type="checkbox" onchange="jsdast('Todo').data().checkTodo(this, {{Idx}})" checked="checked" />
+        <!--showstop:done-1-->
+        <!--showfrom:done-0-->
+        <input type="checkbox" onchange="jsdast('Todo').data().checkTodo(this, {{Idx}})" />
+        <!--showstop:done-0-->
+        <span class="done-{{done}}">{{text}}</span>
+      </li>
+      <!--repeatstop:tasks-->
+    </ul>
+    <input type="text" size="30" placeholder="add new todo here">
+    <input class="btn-primary" type="button" value="add" onclick="jsdast('Todo').data().addTodo(this)">
+  </div>
+
+
+  <script language="javascript" type="text/javascript">
+
+    //
+    // Todo Example
+    //
+
+    jsdast("Todo").renderSetup(function (scope)
+    {
+      // repeat all tasks in the list
+      scope.repeat("tasks", scope.data.todos, function (scope, idx, item)
+      {
+        scope.toggle("done-1", item.done);
+        scope.toggle("done-0", !item.done);
+        scope.value("{{Idx}}", idx);
+      });
+      // count remaning tasks
+      var countLeft = 0;
+      for (var i = 0; i < scope.data.todos.length; i++) if (!scope.data.todos[i].done) countLeft++;
+      // output some values
+      scope.value("{{Left}}", countLeft);
+      scope.value("{{Total}}", scope.data.todos.length);
+    });
+
+    jsdast("Todo").data({
+      todos: // list to keep all tasks
+        [
+          { text: 'learn angular', done: true },
+          { text: 'build an angular app', done: false }
+        ],
+      addTodo: function (input) // func to invoke on add button click
+      {
+        this.todos.push({ text: $(input).prev("input").val(), done: false });
+        $(input).prev("input").val("");
+        jsdast("Todo").refresh();
+      },
+      checkTodo: function (chk, idx) // func to invoke on checkbox click
+      {
+        this.todos[idx].done = chk.checked;
+        jsdast("Todo").refresh();
+      },
+      archive: function () // func to invoke on archive link click
+      {
+        var oldTodos = this.todos;
+        this.todos = [];
+        for (var i = 0; i < oldTodos.length; i++)
+        {
+          if (!oldTodos[i].done) this.todos.push(oldTodos[i]);
+        }
+        jsdast("Todo").refresh();
+      }
+    });
+
+    jsdast("Todo").refresh();
+ 
+  </script>
+
+</body>
+</html>

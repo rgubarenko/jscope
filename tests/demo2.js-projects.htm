@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>jsDaST DEMO - JavaScript Projects</title>
+   
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+  <script type="text/javascript" src="data.json.js"></script>
+  <script type="text/javascript" src="../jsdast.js"></script>
+ 
+  <style type="text/css">
+    .err-info { display: none; }
+    .error { color: red; }
+    .error input { border: solid 1px red;}
+    .error.req .err-info.req { display:initial; }
+    .error.url .err-info.url { display:initial; }
+  </style>
+  
+</head>
+<body>
+
+  <h1>JavaScript Projects</h1>
+  <div jsdast:scope="JSProj">
+    <!--showfrom:screen-list-->
+    <input type="text" placeholder="Search" class="search-query" value="" />
+    <table>
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Description</th>
+          <th><a href="javascript:jsdast('JSProj').data().onItemEdit(null)">Add</a></th>
+        </tr>
+      </thead>
+      <tbody jsdast:scope="JSProjList">
+        <!--repeatfrom:projects-->
+        <tr>
+          <td><a href="{{site}}" target="_blank">{{name}}</a></td>
+          <td>{{description}}</td>
+          <td><a href="javascript:jsdast('JSProj').data().onItemEdit({{ProjIdx}})">Edit</a></td>
+        </tr>
+        <!--repeatstop:projects-->
+      </tbody>
+    </table>
+    <!--showstop:screen-list-->
+    <!--showfrom:screen-edit-->
+    <div>
+      <div class="form-name">
+        <label>Name</label>
+        <input type="text" value="{{EditName}}" class="txt-name" />
+        <span class="err-info req">Required</span>
+      </div>
+      <div class="form-site">
+        <label>Website</label>
+        <input type="text" value="{{EditWebsite}}" class="txt-site" />
+        <span class="err-info req">Required</span>
+        <span class="err-info url">Not a URL</span>
+      </div>
+      <label>Description</label>
+      <textarea rows="4" cols="20" class="txt-desc">{{EditDescription}}</textarea>
+      <br />
+      <a href="javascript:jsdast('JSProj').data().onEditCancel()">Cancel</a>
+      <button onclick="jsdast('JSProj').data().onEditSave()" class="btn-save">Save</button>
+      <!--showfrom:can-delete-->
+      <button onclick="jsdast('JSProj').data().onEditDelete()">Delete</button>
+      <!--showstop:can-delete-->
+    </div>
+    <!--showstop:screen-edit-->
+  </div>
+
+
+  <script language="javascript" type="text/javascript">
+
+    //
+    // JS Projects Example
+    //
+
+    jsdast("JSProj").renderSetup(
+      function (scope) // primary rendering fuction
+      {
+        if (scope.data.currEdit) // edit screen
+        {
+          scope.toggle("screen-list", false);
+          scope.toggle("screen-edit", true);
+          // hide delete button if edit screen is for new item
+          scope.toggle("can-delete", scope.data.currEdit.idx != null);
+          // output values for existing item
+          var proj = scope.data.currEdit;
+          scope.value("{{EditName}}", proj ? proj.name : "");
+          scope.value("{{EditWebsite}}", proj ? proj.site : "");
+          scope.value("{{EditDescription}}", proj ? proj.desc : "");
+        }
+        else // project list sreen
+        {
+          scope.toggle("screen-list", true);
+          scope.toggle("screen-edit", false);
+        }
+      },
+      function (scope) // function called after rendering completes
+      {
+        if (scope.data.currEdit) // edit screen
+        {
+          // intercept every input on the input form fields
+          $(".txt-name,.txt-site,.txt-desc", scope.data.elem).bind("input", function ()
+          {
+            scope.data.currEdit.name = $(".txt-name", scope.data.elem).val();
+            scope.data.currEdit.site = $(".txt-site", scope.data.elem).val();
+            scope.data.currEdit.desc = $(".txt-desc", scope.data.elem).val();
+            scope.data.validateEdit(scope.data.elem);
+          });
+          // initial call to validation function 
+          scope.data.validateEdit(scope.data.elem);
+        }
+        else // project list screen
+        {
+          // restore jQuery input event binding
+          $(".search-query", scope.elem).bind("input", function ()
+          {
+            jsdast("JSProjList").data().filter = $(this).val().toLowerCase();
+            jsdast("JSProjList").refresh();
+          });
+          // refresh list of projects
+          jsdast("JSProjList").data().filter = null;
+          jsdast("JSProjList").refresh();
+        }
+      });
+
+    jsdast("JSProj").data({
+      projects: data_AngularDB.projects, // list to keep all projects
+      currEdit: null, // currently editing project
+      onItemEdit: function (idx) // func to call on edit button click
+      {
+        if (idx == null) this.currEdit = { name: "", site: "", desc: "", idx: null };
+        else this.currEdit = { name: this.projects[idx].name, site: this.projects[idx].site, desc: this.projects[idx].description, idx: idx };
+        jsdast("JSProj").refresh();
+      },
+      onEditCancel: function () // func to call on cancel button click
+      {
+        this.currEdit = null;
+        jsdast("JSProj").refresh();
+      },
+      onEditDelete: function () // func to call on delete button click
+      {
+        this.projects.splice(this.currEdit.idx, 1);
+        this.currEdit = null;
+        jsdast("JSProj").refresh();
+      },
+      onEditSave: function (input) // func to call on save button click
+      {
+        var proj = {};
+        if (this.currEdit.idx != null) proj = this.projects[this.currEdit.idx]
+        else this.projects.push(proj);
+        proj.name = this.currEdit.name;
+        proj.site = this.currEdit.site;
+        proj.description = this.currEdit.desc;
+
+        this.currEdit = null;
+        jsdast("JSProj").refresh();
+      },
+      validateEdit: function (container) // helper function to validate inputs and display errors
+      {
+        $(".form-name", container).removeClass("error req");
+        if (!this.currEdit.name.match(/[^\s]/ig)) $(".form-name", container).addClass("error req");
+
+        $(".form-site", container).removeClass("error req url");
+        if (!this.currEdit.site.match(/[^\s]/ig)) $(".form-site", container).addClass("error req");
+        else if (!this.currEdit.site.match(/(http|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/ig)) $(".form-site", container).addClass("error url");
+
+        if ($(".error", container).length > 0) $(".btn-save", container).attr("disabled", "disabled");
+        else $(".btn-save", container).removeAttr("disabled");
+      }
+    });
+
+    jsdast("JSProjList").renderSetup(
+      function (scope) // primary rendering fuction
+      {
+        // repeat filtered list of projects here
+        scope.repeat("projects", scope.data.getProjects(), function (scope, idx, item)
+        {
+          scope.value("{{ProjIdx}}", item.idx); // need project idx for edit link
+        });
+      });
+
+    jsdast("JSProjList").data({
+      filter: null, // current filter value
+      getProjects: function () // get projects based on current filter
+      {
+        var projects = jsdast("JSProj").data().projects;
+        var filteredProjects = [];
+        // just do simplest partial match filtering
+        for (var i = 0; i < projects.length; i++)
+        {
+          var proj = projects[i];
+          if (this.filter && proj.name.toLowerCase().indexOf(this.filter) < 0 && proj.description.toLowerCase().indexOf(this.filter) < 0) continue;
+          proj.idx = i; // add .idx property to each filtered project
+          filteredProjects.push(proj);
+        }
+        return filteredProjects;
+      }
+    });
+
+    jsdast("JSProj").refresh();
+ 
+  </script>
+
+</body>
+</html>
