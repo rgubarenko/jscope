@@ -12,7 +12,7 @@ Why use jsDaST?
 ## LINKS
 
 - [Getting Started with jsDaST](http://www.makeitsoft.com/jsdast/jsdast-info/ "Getting Started with jsDaST")
-- [jsDaST LIVE DEMOs](http://www.makeitsoft.com/jsdast/jsdast-examples/ "jsDaST LIVE DEMOs")
+- [jsDaST Demos LIVE!](http://www.makeitsoft.com/jsdast/jsdast-examples/ "jsDaST Demos LIVE!")
 
 ## Quick Usage
 
@@ -71,7 +71,7 @@ jsdast("Scope1").data({
 jsdast("Scope1").refresh(); 
 ``` 
 
-This is all you need to know about jsDaST! 
+This is all you need to know about jsDaST! See [Getting Started with jsDaST](http://www.makeitsoft.com/jsdast/jsdast-info/ "Getting Started with jsDaST") for more info.
 
 ## License and Copyright
 
