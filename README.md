@@ -9,7 +9,12 @@ Why use jsDaST?
 - Full separation of HTML template and JavaScript controller code
 - Fully customizable output, no limitation at all
 
-## Usage
+## LINKS
+
+- [Getting Started with jsDaST](http://www.makeitsoft.com/jsdast/jsdast-info/ "Getting Started with jsDaST")
+- [jsDaST LIVE DEMOs](http://www.makeitsoft.com/jsdast/jsdast-examples/ "jsDaST LIVE DEMOs")
+
+## Quick Usage
 
 According to [DaST pattern](http://www.makeitsoft.com/aspnetdast/dast-overview/ "DaST pattern"), the page is viewed as a set of randomly nested scopes. Scope is a rectangle corresponding to some container element (DIV, SPAN, etc.) in HTML template. Each scope is rendered individually and can be refreshed at any time. In jsDaST, every scope has 2 things associated with it:
 - Rendering Callback - the function that does all jsRazor repeat-n-toggle stuff
@@ -66,8 +71,7 @@ jsdast("Scope1").data({
 jsdast("Scope1").refresh(); 
 ``` 
 
-This is all you need to know about jsDaST! Now browse real examples to see jsRazor in action!
-
+This is all you need to know about jsDaST! 
 
 ## License and Copyright
 
