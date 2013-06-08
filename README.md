@@ -12,7 +12,7 @@ Why use jsDaST?
 ## LINKS
 
 - [Getting Started with jsDaST](http://www.makeitsoft.com/jsdast/jsdast-info/ "Getting Started with jsDaST")
-- [jsDaST Demos LIVE!](http://www.makeitsoft.com/jsdast/jsdast-examples/ "jsDaST Demos LIVE!")
+- [jsDaST Demos LIVE!](http://www.makeitsoft.com/jsdast/jsdast-demos/ "jsDaST Demos LIVE!")
 
 ## Quick Usage
 
