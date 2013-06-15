@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head><title>jsDaST DEMO - JavaScript Projects</title>
+<head><title>jScope DEMO - JavaScript Projects</title>
    
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
   <script type="text/javascript" src="data.json.js"></script>
-  <script type="text/javascript" src="../jsdast.js"></script>
+  <script type="text/javascript" src="../jscope.js"></script>
  
   <style type="text/css">
     .err-info { display: none; }
@@ -19,29 +19,29 @@
 <body>
 
   <h1>JavaScript Projects</h1>
-  <div jsdast:scope="JSProj">
-    <!--showfrom:screen-list-->
+  <div jscope:scope="JSProj">
+    <!--toggle:screen-list-->
     <input type="text" placeholder="Search" class="search-query" value="" />
     <table>
       <thead>
         <tr>
           <th>Project</th>
           <th>Description</th>
-          <th><a href="javascript:jsdast('JSProj').data().onItemEdit(null)">Add</a></th>
+          <th><a href="javascript:jscope('JSProj').data().onItemEdit(null)">Add</a></th>
         </tr>
       </thead>
-      <tbody jsdast:scope="JSProjList">
-        <!--repeatfrom:projects-->
+      <tbody jscope:scope="JSProjList">
+        <!--repeat:projects-->
         <tr>
           <td><a href="{{site}}" target="_blank">{{name}}</a></td>
           <td>{{description}}</td>
-          <td><a href="javascript:jsdast('JSProj').data().onItemEdit({{ProjIdx}})">Edit</a></td>
+          <td><a href="javascript:jscope('JSProj').data().onItemEdit({{ProjIdx}})">Edit</a></td>
         </tr>
-        <!--repeatstop:projects-->
+        <!--#repeat:projects-->
       </tbody>
     </table>
-    <!--showstop:screen-list-->
-    <!--showfrom:screen-edit-->
+    <!--#toggle:screen-list-->
+    <!--toggle:screen-edit-->
     <div>
       <div class="form-name">
         <label>Name</label>
@@ -57,13 +57,13 @@
       <label>Description</label>
       <textarea rows="4" cols="20" class="txt-desc">{{EditDescription}}</textarea>
       <br />
-      <a href="javascript:jsdast('JSProj').data().onEditCancel()">Cancel</a>
-      <button onclick="jsdast('JSProj').data().onEditSave()" class="btn-save">Save</button>
-      <!--showfrom:can-delete-->
-      <button onclick="jsdast('JSProj').data().onEditDelete()">Delete</button>
-      <!--showstop:can-delete-->
+      <a href="javascript:jscope('JSProj').data().onEditCancel()">Cancel</a>
+      <button onclick="jscope('JSProj').data().onEditSave()" class="btn-save">Save</button>
+      <!--toggle:can-delete-->
+      <button onclick="jscope('JSProj').data().onEditDelete()">Delete</button>
+      <!--#toggle:can-delete-->
     </div>
-    <!--showstop:screen-edit-->
+    <!--#toggle:screen-edit-->
   </div>
 
 
@@ -73,7 +73,7 @@
     // JS Projects Example
     //
 
-    jsdast("JSProj").renderSetup(
+    jscope("JSProj").setRender(
       function (scope) // primary rendering fuction
       {
         if (scope.data.currEdit) // edit screen
@@ -114,34 +114,34 @@
           // restore jQuery input event binding
           $(".search-query", scope.elem).bind("input", function ()
           {
-            jsdast("JSProjList").data().filter = $(this).val().toLowerCase();
-            jsdast("JSProjList").refresh();
+            jscope("JSProjList").data().filter = $(this).val().toLowerCase();
+            jscope("JSProjList").refresh();
           });
           // refresh list of projects
-          jsdast("JSProjList").data().filter = null;
-          jsdast("JSProjList").refresh();
+          jscope("JSProjList").data().filter = null;
+          jscope("JSProjList").refresh();
         }
       });
 
-    jsdast("JSProj").data({
+    jscope("JSProj").setData({
       projects: data_AngularDB.projects, // list to keep all projects
       currEdit: null, // currently editing project
       onItemEdit: function (idx) // func to call on edit button click
       {
         if (idx == null) this.currEdit = { name: "", site: "", desc: "", idx: null };
         else this.currEdit = { name: this.projects[idx].name, site: this.projects[idx].site, desc: this.projects[idx].description, idx: idx };
-        jsdast("JSProj").refresh();
+        jscope("JSProj").refresh();
       },
       onEditCancel: function () // func to call on cancel button click
       {
         this.currEdit = null;
-        jsdast("JSProj").refresh();
+        jscope("JSProj").refresh();
       },
       onEditDelete: function () // func to call on delete button click
       {
         this.projects.splice(this.currEdit.idx, 1);
         this.currEdit = null;
-        jsdast("JSProj").refresh();
+        jscope("JSProj").refresh();
       },
       onEditSave: function (input) // func to call on save button click
       {
@@ -153,7 +153,7 @@
         proj.description = this.currEdit.desc;
 
         this.currEdit = null;
-        jsdast("JSProj").refresh();
+        jscope("JSProj").refresh();
       },
       validateEdit: function (container) // helper function to validate inputs and display errors
       {
@@ -169,7 +169,7 @@
       }
     });
 
-    jsdast("JSProjList").renderSetup(
+    jscope("JSProjList").setRender(
       function (scope) // primary rendering fuction
       {
         // repeat filtered list of projects here
@@ -179,11 +179,11 @@
         });
       });
 
-    jsdast("JSProjList").data({
+    jscope("JSProjList").setData({
       filter: null, // current filter value
       getProjects: function () // get projects based on current filter
       {
-        var projects = jsdast("JSProj").data().projects;
+        var projects = jscope("JSProj").data().projects;
         var filteredProjects = [];
         // just do simplest partial match filtering
         for (var i = 0; i < projects.length; i++)
@@ -197,7 +197,7 @@
       }
     });
 
-    jsdast("JSProj").refresh();
+    jscope("JSProj").refresh();
  
   </script>
 
