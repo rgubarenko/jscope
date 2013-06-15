@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>jScope DEMO - Todo</title>
+   
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+  <script type="text/javascript" src="data.json.js"></script>
+  <script type="text/javascript" src="../jscope.js"></script>
+  
+  <style type="text/css">
+    .gizmo { border:solid 1px black; margin:10px; padding:10px; }
+  </style>
+
+</head>
+<body>
+
+  <div jscope:scope="A" class="gizmo">
+    <div>Scope: A</div>
+    <!--repeat:B-->
+    <div jscope:scope="B#{{#B}}" class="gizmo">
+      <div>Scope: B&nbsp;|&nbsp;Item: <span class="name">{{B.name}}</span></div>
+    </div>
+    <!--#repeat:B-->
+  </div>
+
+
+  <script language="javascript" type="text/javascript">
+
+    jscope("A").setRender(function (scope)
+    {
+      console.log("A.render() data", scope.data);
+      scope.repeat("B", data_Bs, function (scope, idx, item)
+      {
+        jscope("B", scope.uid).setData({ item: item });
+      });
+    });
+
+    jscope("B").setRender(function (scope)
+    {
+      console.log("B.render() data", scope.data);
+      scope.value("{{B.name}}", scope.data.item.name);
+    });
+
+    jscope("A").setData({ text1: "A: data1" });
+    jscope("A", 123).setData({ textWrong: "A: should not see this one!" });
+    jscope("A").setData({ text1: "A: data1 override", text2: "A: data2" });
+
+    jscope("B").setData({ text1: "B: data" });
+    jscope("B", 2).setData({ text1: "B2: B data override" });
+    jscope("B", 2).setData({ text2: "B2: data2" });
+
+    console.log("---- initial");
+    console.log("jscope('A').data()", jscope("A").data());
+    console.log("jscope('B').data()", jscope("B").data());
+    console.log("jscope('B', 1).data()", jscope("B", 1).data()); // TODO: problem here - shoould not be empty
+    console.log("jscope('B', 2).data()", jscope("B", 2).data());
+    console.log("jscope('B', 3).data()", jscope("B", 3).data()); // TODO: problem here - shoould not be empty
+
+    jscope("A").refresh();
+
+    console.log("---- after A.refresh()");
+    console.log("jscope('A').data()", jscope("A").data());
+    console.log("jscope('B').data()", jscope("B").data());
+    console.log("jscope('B', 1).data()", jscope("B", 1).data());
+    console.log("jscope('B', 2).data()", jscope("B", 2).data());
+    console.log("jscope('B', 3).data()", jscope("B", 3).data());
+  
+    jscope("B").refresh();
+
+    console.log("---- after B.refresh()");
+    console.log("jscope('A').data()", jscope("A").data());
+    console.log("jscope('B').data()", jscope("B").data());
+    console.log("jscope('B', 1).data()", jscope("B", 1).data());
+    console.log("jscope('B', 2).data()", jscope("B", 2).data());
+    console.log("jscope('B', 3).data()", jscope("B", 3).data());
+
+
+  </script>
+
+</body>
+</html>
