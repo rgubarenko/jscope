@@ -11,8 +11,8 @@ Why use jsDaST?
 
 ## LINKS
 
-- [Getting Started with jsDaST](http://www.makeitsoft.com/jsdast/jsdast-info/ "Getting Started with jsDaST")
-- [jsDaST Demos LIVE!](http://www.makeitsoft.com/jsdast/jsdast-demos/ "jsDaST Demos LIVE!")
+- [Getting Started with jsDaST](http://www.makeitsoft.com/jscope/jscope-info/ "Getting Started with jsDaST")
+- [jsDaST Demos LIVE!](http://www.makeitsoft.com/jscope/jscope-demos/ "jsDaST Demos LIVE!")
 
 ## Quick Usage
 
