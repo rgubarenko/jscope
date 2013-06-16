@@ -1,5 +1,5 @@
 ﻿/*!
- * jScope Framework v0.3.5
+ * jScope Framework v0.3.6
  * http://github.com/rgubarenko/jscope
  * Simplest client-side templating based on jsRazor rendering and DaST pattern.
  *
