@@ -1,6 +1,6 @@
 # jScope
 
-A client-side templating solution created to surpass existing frameworks in simplicity and flexibility. 
+Client-side templating solution created to surpass existing frameworks in simplicity and flexibility. 
 
 - Ridiculously simple – learned by entry level developer in 15 minutes
 - Ultra fast jsRazor rendering (string-based processing only, no DOM, no JS compilation, no RegEx)
