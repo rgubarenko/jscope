@@ -14,7 +14,7 @@ Client-side templating solution created to surpass existing frameworks in simpli
 - Web Site: [http://www.makeitsoft.com/jscope/](http://www.makeitsoft.com/jscope/ "")
 - Getting Started: [http://www.makeitsoft.com/jscope/jscope-info/](http://www.makeitsoft.com/jscope/jscope-info/ "")
 - jScope Live Demos: [http://www.makeitsoft.com/jscope/jscope-demos/](http://www.makeitsoft.com/jscope/jscope-demos/ "")
-- jScope vs. AngularJS [CodeProject Article Link](http://www.codeproject.com/Articles/589679/jsRazor-vs-AngularJS-Todo-and-JS-Projects-demos-wi "")
+- jScope vs. AngularJS: [CodeProject Article Link](http://www.codeproject.com/Articles/589679/jsRazor-vs-AngularJS-Todo-and-JS-Projects-demos-wi "")
 
 ## License and Copyright
 
