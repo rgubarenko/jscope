@@ -40,8 +40,13 @@
       return matches;
     },
 
-    replaceAll: function(str, search, replace)
+    replaceAll: function(str, search, replace, escape)
     {
+      if (escape === true || escape === undefined) {
+        replace = _util.escape(replace);
+      } else if (_util.isFunc(escape)) {
+        replace = escape(replace);
+      }
       var idx;
       while ((idx = str.indexOf(search)) >= 0)
       {
@@ -102,6 +107,18 @@
     {
       for (var key in source) if (source.hasOwnProperty(key)) target[key] = source[key];
     },
+    
+    escape: function(text)
+    {
+      return text
+        ? (text + "")
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&apos;')
+        : '';
+    },
 
     isFunc: function(func) { return (typeof (func) == "function"); },
     isStr: function(str) { return (typeof (str) == "string"); },
@@ -122,7 +139,7 @@
       limiterFormat: "<!--{type}:{name}-->"
     },
 
-    repeat: function(fragment, name, items, render)
+    repeat: function(fragment, name, items, render, escape)
     {
       try
       {
@@ -166,7 +183,7 @@
             // for string and number, output the values to {item} placeholder
             if (_util.isValueType(item))
             {
-              itemOutput = _util.replaceAll(itemOutput, "{{item}}", "" + item);
+              itemOutput = _util.replaceAll(itemOutput, "{{item}}", "" + item, escape);
             }
             // for JSON object, output applicable properties to placeholders
             else if (item && item.constructor && item.constructor === {}.constructor)
@@ -176,7 +193,7 @@
               {
                 if (item.hasOwnProperty(key) && _util.isValueType(item[key]))
                 {
-                  itemOutput = _util.replaceAll(itemOutput, "{{" + key + "}}", "" + item[key]);
+                  itemOutput = _util.replaceAll(itemOutput, "{{" + key + "}}", "" + item[key], escape);
                 }
               }
             }
@@ -242,7 +259,7 @@
         tmp: tmp,
         data: data,
         elem: elem,
-        repeat: function(name, items, render)
+        repeat: function(name, items, render, escape)
         {
           var thisObj = this;
           this.tmp = _razor.repeat(this.tmp, name, items, function(tmp, idx, item)
@@ -252,15 +269,15 @@
             if (_util.isFunc(render)) render(facade, idx, item);
             facade.tmp = _util.replaceAll(facade.tmp, "{{#" + name + "}}", uid);
             return facade.tmp;
-          });
+          }, escape);
         },
         toggle: function(name, flag)
         {
           this.tmp = _razor.toggle(this.tmp, name, flag);
         },
-        value: function(placeholder, value)
+        value: function(placeholder, value, escape)
         {
-          this.tmp = _util.replaceAll(this.tmp, placeholder, "" + value);
+          this.tmp = _util.replaceAll(this.tmp, placeholder, "" + value, escape);
         }
       };
     }
