@@ -110,14 +110,14 @@
     
     escape: function(text)
     {
-      return text
-        ? (text + "")
+      return text === null || text === undefined
+        ? ''
+        : (text + "")
           .replace(/&/g, '&amp;')
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;')
           .replace(/"/g, '&quot;')
-          .replace(/'/g, '&apos;')
-        : '';
+          .replace(/'/g, '&apos;');
     },
 
     isFunc: function(func) { return (typeof (func) == "function"); },
@@ -277,8 +277,10 @@
         },
         value: function(placeholder, value, escape)
         {
-          this.tmp = _util.replaceAll(this.tmp, placeholder, "" + value, escape);
-        }
+          this.tmp = _util.replaceAll(this.tmp, placeholder, value, escape);
+        },
+        text: function(placeholder, value) { this.value(placeholder, value, true); },
+        html: function(placeholder, value) { this.value(placeholder, value, false); }
       };
     }
   };
